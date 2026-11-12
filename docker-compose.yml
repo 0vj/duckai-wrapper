@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  duckai-wrapper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duckai-wrapper
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - MAX_CONCURRENT_SESSIONS=3
+      - DEFAULT_MODEL=gpt-6-luna
+      - BROWSER_HEADLESS=true
+      - SESSION_TIMEOUT_SECONDS=180
+    shm_size: '1gb'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
